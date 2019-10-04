@@ -11,21 +11,15 @@ set :port, 3000
 set :bind, '0.0.0.0'
 
 
-# This is template code to create a GitHub App server.
+# This is code to create a GitHub App server that listens repository events, and
+# when a new repository is created it adds pretections to the master branch
 # You can read more about GitHub Apps here: # https://developer.github.com/apps/
 #
-# On its own, this app does absolutely nothing, except that it can be installed.
-# It's up to you to add functionality!
-# You can check out one example in advanced_server.rb.
 #
 # This code is a Sinatra app, for two reasons:
 #   1. Because the app will require a landing page for installation.
 #   2. To easily handle webhook events.
 #
-# Of course, not all apps need to receive and process events!
-# Feel free to rip out the event handling code if you don't need it.
-#
-# Have fun!
 #
 
 class GHAapp < Sinatra::Application
@@ -60,10 +54,6 @@ class GHAapp < Sinatra::Application
 
 
   post '/event_handler' do
-
-    # # # # # # # # # # # #
-    # ADD YOUR CODE HERE  #
-    # # # # # # # # # # # #
     case request.env['HTTP_X_GITHUB_EVENT']
     when 'repository'
       if @payload['action'] === 'created'
@@ -149,6 +139,9 @@ class GHAapp < Sinatra::Application
       logger.debug "----    action #{@payload['action']}" unless @payload['action'].nil?
     end
 
+    # Add protections to the master branch and create an issue in the repository
+    # Notify the owner with an @mention in an issue within the repository that
+    # outlines the protections that were added.
     def handle_repository_created_event(payload)
       logger.debug 'A repository was created!'
       status_checks = Hash.new
