@@ -26,6 +26,6 @@ To run the code, make sure you have [Bundler](http://gembundler.com/) installed;
 1. View the default Sinatra app at `localhost:3000`.
 
 ## Useful Links
-http://octokit.github.io/octokit.rb/Octokit.html
-https://developer.github.com/apps/quickstart-guides/using-the-github-api-in-your-app/
-https://developer.github.com/apps/about-apps/
+- http://octokit.github.io/octokit.rb/Octokit.html
+- https://developer.github.com/apps/quickstart-guides/using-the-github-api-in-your-app/
+- https://developer.github.com/apps/about-apps/
