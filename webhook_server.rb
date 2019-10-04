@@ -34,8 +34,12 @@ class GHAapp < Sinatra::Application
   # The GitHub App's identifier (type integer) set when registering an app.
   APP_IDENTIFIER = ENV['GITHUB_APP_IDENTIFIER']
 
-  # The GitHub App's identifier (type integer) set when registering an app.
+  # User
   OWNER= ENV['OWNER']
+
+  # Password
+  PWD= ENV['PASSWORD']
+
 
   # Turn on Sinatra's verbose logging during development
   configure :development do
@@ -50,12 +54,19 @@ class GHAapp < Sinatra::Application
     authenticate_app
     # Authenticate the app installation in order to run API operations
     authenticate_installation(@payload)
+    logger.debug OWNER
+    logger.debug PWD
+    authenticate_user
   end
 
 
   post '/event_handler' do
     case request.env['HTTP_X_GITHUB_EVENT']
     when 'repository'
+      @userclient.organizations.each do |org|
+         full_name = org[:full_name]
+          puts "User has access to #{full_name}."
+      end
       if @payload['action'] === 'created'
         handle_repository_created_event(@payload)
       end
@@ -108,6 +119,14 @@ class GHAapp < Sinatra::Application
       @app_client ||= Octokit::Client.new(bearer_token: jwt)
     end
 
+    # Instantiate an Octokit client authenticated as a user
+    def authenticate_user
+      #@userclient = Octokit::Client.new(:login => OWNER, :password => PWD)
+      @userclient = Octokit::Client.new(:login => OWNER, :access_token => PWD)
+      #@user_token=@userclient.create_authorization(:scopes => ["user"], :note => "Name of token")
+      #@git_client=
+    end
+
     # Instantiate an Octokit client, authenticated as an installation of a
     # GitHub App, to run API operations.
     def authenticate_installation(payload)
@@ -150,7 +169,23 @@ class GHAapp < Sinatra::Application
       protections[:required_status_checks]=status_checks
       repo = payload['repository']['full_name']
       @installation_client.create_issue(repo, 'Protections applied', '@'+OWNER+' the following protections were applied: Enforce required status checks for repository administrators')
-      @installation_client.protect_branch(repo, 'master', protections)
+      #@installation_client.protect_branch(repo, 'master', protections)
+
+      @userclient.protect_branch(repo, "master", {
+  required_status_checks: {
+    strict: true,
+    contexts: ["continuous-integration/jenkins/branch", "continuous-integration/jenkins/pr-merge"],
+  },
+  enforce_admins: false,
+  required_pull_request_reviews: {
+    dismiss_stale_reviews: true,
+    require_code_owner_reviews: false,
+  },
+  restrictions: {
+    users: [],
+    teams: ["pr-approvers"],
+  },
+})
     end
   end
 
