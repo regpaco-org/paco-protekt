@@ -40,6 +40,9 @@ class GHAapp < Sinatra::Application
   # The GitHub App's identifier (type integer) set when registering an app.
   APP_IDENTIFIER = ENV['GITHUB_APP_IDENTIFIER']
 
+  # The GitHub App's identifier (type integer) set when registering an app.
+  OWNER= ENV['OWNER']
+
   # Turn on Sinatra's verbose logging during development
   configure :development do
     set :logging, Logger::DEBUG
@@ -153,6 +156,7 @@ class GHAapp < Sinatra::Application
       protections = Hash.new
       protections[:required_status_checks]=status_checks
       repo = payload['repository']['full_name']
+      @installation_client.create_issue(repo, 'Protections applied', '@'+OWNER+' the following protections were applied: Enforce required status checks for repository administrators')
       @installation_client.protect_branch(repo, 'master', protections)
     end
   end
