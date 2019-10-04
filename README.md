@@ -1,6 +1,6 @@
-This app is based on [GitHub App](https://developer.github.com/apps/about-apps/) template code as a foundation.
+This app is based on [GitHub App](https://developer.github.com/apps/about-apps/) as a foundation.
 
-GitHub App server that listens repository events, and when a new repository is created it adds pretections to the master branch.
+The GitHub App listens to repository events, and when a new repository is created it adds pretections to the master branch.
 
 You can read more about GitHub Apps here: https://developer.github.com/apps/
 
