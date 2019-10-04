@@ -168,7 +168,7 @@ class GHAapp < Sinatra::Application
       protections = Hash.new
       protections[:required_status_checks]=status_checks
       repo = payload['repository']['full_name']
-      @installation_client.create_issue(repo, 'Protections applied', '@'+OWNER+' the following protections were applied: Enforce required status checks for repository administrators')
+      @installation_client.create_issue(repo, 'Protections applied', '@'+OWNER+' the following protections were applied: required_status_checks: {strict: true,    contexts: [continuous-integration/jenkins/branch, continuous-integration/jenkins/pr-merge],  },  enforce_admins: false,  required_pull_request_reviews: {    dismiss_stale_reviews: true,    require_code_owner_reviews: false,  },  restrictions: {    users: [],    teams: [pr-approvers],   }')
       #@installation_client.protect_branch(repo, 'master', protections)
 
       @userclient.protect_branch(repo, "master", {
