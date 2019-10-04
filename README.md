@@ -4,7 +4,7 @@ The GitHub App listens to repository events, and when a new repository is create
 
 You can read more about GitHub Apps here: https://developer.github.com/apps/
 
-*__NOTE:__ If you are interested in a Java version, take a look at a basic WebHook implementation written in Java that listens to WebHook notifications*
+*__NOTE:__ If you are interested in a Java version, take a look at a basic WebHook implementation written in Java that listens to WebHook notifications https://github.com/regpaco-org/githook*
 
 ## Pre-Requisites
 
