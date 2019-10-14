@@ -17,8 +17,8 @@ To run the code, make sure you have [Bundler](http://gembundler.com/) installed;
 
 ## Set environment variables
 
-1. Create a copy of the `.env-example` file called `.env`.
-2. Add your GitHub App's private key, app ID, and webhook secret to the `.env` file.
+1. Create file called `.env`.
+2. Add your GitHub App's private key, app ID, webhook secret, a github account and password to the `.env` file.
 
 ## Run the server
 
